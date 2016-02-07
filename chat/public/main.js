@@ -7,6 +7,9 @@ $(function() {
 		'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
 	];
 
+	// set custom link to homepage
+	$('#homepage').attr('href', "http://" +location.hostname);
+
 	// Initialize variables
 	var $window = $(window);
 	var $usernameInput = $('.usernameInput'); // Input for username
@@ -21,9 +24,23 @@ $(function() {
 	var connected = false;
 	var typing = false;
 	var lastTypingTime;
-	var $currentInput = $usernameInput.focus();
+	var $currentInput;
 
 	var socket = io();
+
+	// Username integration
+
+	function getSession() {
+		var url = "http://" +location.hostname +"/php/session"
+	var result = $.ajax({
+		url: url,
+		async: false,
+		method: "GET",
+		contentType: "application/json; charset=utf-8",
+		data: {}
+	});
+		return result.responseJSON;
+	};
 
 	function addParticipantsMessage (data) {
 		var message = '';
@@ -37,10 +54,11 @@ $(function() {
 
 	// Sets the client's username
 	function setUsername () {
-		username = cleanInput($usernameInput.val().trim());
+		username = getSession()
 
 		// If the username is valid
 		if (username) {
+			username = username.firstName + " " + username.lastName
 			$loginPage.fadeOut();
 			$chatPage.show();
 			$loginPage.off('click');
@@ -213,8 +231,6 @@ $(function() {
 				sendMessage();
 				socket.emit('stop typing');
 				typing = false;
-			} else {
-				setUsername();
 			}
 		}
 	});
@@ -276,4 +292,6 @@ $(function() {
 	socket.on('stop typing', function (data) {
 		removeChatTyping(data);
 	});
+
+	setUsername();
 });
