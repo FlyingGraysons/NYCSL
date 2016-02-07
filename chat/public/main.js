@@ -9,7 +9,7 @@ $(function() {
 
 	// set custom link to homepage
 	$('#homepage').attr('href', "http://" +location.hostname);
-
+	$('#homepage').text(location.hostname);
 	// Initialize variables
 	var $window = $(window);
 	var $usernameInput = $('.usernameInput'); // Input for username
