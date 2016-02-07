@@ -69,7 +69,7 @@ $(function() {
 		// 		});
 		// }
 
-		else if (message && connected) {
+		if (message && connected) {
 			$inputMessage.val('');
 			addChatMessage({
 				username: username,
